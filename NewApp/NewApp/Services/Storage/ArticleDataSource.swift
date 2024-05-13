@@ -30,13 +30,35 @@ final class ArticleDataSource {
     }
 
     func fetchArticles(for searchTerm: String) -> Set<Article> {
+        Set(fetchAllArticles().compactMap {
+            if $0.searchTerm == searchTerm {
+                return $0
+            }
+            return nil
+        })
+    }
+    
+    func fetchFavoriteArticles() -> Set<Article> {
+        Set(fetchAllArticles().compactMap {
+            if $0.isFavorite ?? false {
+                return $0
+            }
+            return nil
+        })
+    }
+    
+    func fetchFavoriteArticles(for searchTerm: String) -> Set<Article> {
+        Set(fetchArticles(for: searchTerm).compactMap {
+            if $0.isFavorite ?? false {
+                return $0
+            }
+            return nil
+        })
+    }
+    
+    func fetchAllArticles() -> Set<Article> {
         do {
-            return try Set(modelContext.fetch(FetchDescriptor<Article>()).compactMap { 
-                if $0.searchTerm == searchTerm {
-                    return $0
-                }
-                return nil
-            })
+            return try Set(modelContext.fetch(FetchDescriptor<Article>()))
         } catch {
             fatalError(error.localizedDescription)
         }

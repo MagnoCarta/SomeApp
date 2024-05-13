@@ -19,7 +19,9 @@ struct Star: ViewModifier {
                 VStack {
                     Spacer()
                     Button("") {
-                        isFilled?.toggle()
+                        withAnimation {
+                            isFilled?.toggle()
+                        }
                     }.buttonStyle(StarStyle(isFilled: $isFilled, color: color, size: size))
                 }
                 .padding(12)

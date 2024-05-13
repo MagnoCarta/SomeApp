@@ -78,8 +78,8 @@ class Article {
         self.urlToImage = articleData.urlToImage
         self.publishedAt = articleData.publishedAt
         self.content = articleData.content
-        self.isFavorite = articleData.isFavorite
-        self.shadowBlock = articleData.shadowBlock
+        self.isFavorite = false
+        self.shadowBlock = false
         self.searchTerm = searchTerm
     }
     

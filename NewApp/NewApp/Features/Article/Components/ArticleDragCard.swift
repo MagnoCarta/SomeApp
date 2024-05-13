@@ -20,6 +20,7 @@ struct ArticleDragCard: View {
     @State private var cardAngle: Angle = .zero
     
     private let duration: CGFloat = 0.18
+    @State private var isScrolling: Bool = false
 
     
     var body: some View {
@@ -50,7 +51,13 @@ struct ArticleDragCard: View {
                 Text(article.author ?? "Unknown Author")
                     .font(.largeTitle)
                     .bold()
-                Text(article.summary ?? "No Content")
+                ScrollView {
+                    Text(article.summary ?? "No Content")
+                }
+                .gesture(
+                    DragGesture()
+                        .onChanged(didDragText)
+                )
             }
             HStack(spacing: 16) {
                 VStack {
@@ -58,7 +65,7 @@ struct ArticleDragCard: View {
                         .resizable()
                         .frame(width: 103, height: 108)
                 }
-                Text(article.source?.name ?? "No Source")
+                Text(article.publishedAt ?? "No Published Date")
                     .font(.footnote)
             }
         }
@@ -66,42 +73,54 @@ struct ArticleDragCard: View {
     }
     
     private func dragDidChange(_ gesture: DragGesture.Value) {
-        dragAmout = gesture.translation
-        cardAngle = Angle(degrees: gesture.translation.width * 0.05)
-        
-        if gesture.translation.width > 0 && direction != .right {
-            withAnimation(.linear(duration: duration)) {
-                direction = .right
+        if !isScrolling {
+            dragAmout = gesture.translation
+            cardAngle = Angle(degrees: gesture.translation.width * 0.05)
+            
+            if gesture.translation.width > 0 && direction != .right {
+                withAnimation(.linear(duration: duration)) {
+                    direction = .right
+                }
             }
-        }
-        
-        if gesture.translation.width < 0 && direction != .left {
-            withAnimation(.linear(duration: duration)) {
-                direction = .left
+            
+            if gesture.translation.width < 0 && direction != .left {
+                withAnimation(.linear(duration: duration)) {
+                    direction = .left
+                }
             }
-        }
-        
-        if gesture.translation == .zero && direction != .none {
-            withAnimation(.linear(duration: duration)) {
-                direction = .none
+            
+            if gesture.translation == .zero && direction != .none {
+                withAnimation(.linear(duration: duration)) {
+                    direction = .none
+                }
             }
         }
     }
     
     private func dragDidEnd(_ gesture: DragGesture.Value) {
-        let articleNumber = articles.count
-        if direction == .left && actualIndex > 0 {
-            actualIndex -= 1
-        } else if direction == .right && actualIndex < articleNumber - 1 {
-            actualIndex += 1
-        }
-        withAnimation(.linear(duration: duration)) {
-            self.article = articles[actualIndex]
-            dragAmout = .zero
-            cardAngle = .zero
-            direction = .none
+        if !isScrolling {
+            let articleNumber = articles.count
+            if direction == .left && actualIndex > 0 {
+                actualIndex -= 1
+            } else if direction == .right && actualIndex < articleNumber - 1 {
+                actualIndex += 1
+            }
+            withAnimation(.linear(duration: duration)) {
+                self.article = articles[actualIndex]
+                dragAmout = .zero
+                cardAngle = .zero
+                direction = .none
+            }
         }
     }
+    
+    private func didDragText(_ gesture: DragGesture.Value) {
+        self.isScrolling = true
+        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(100)) {
+            self.isScrolling = false
+        }
+    }
+
     
     
 }

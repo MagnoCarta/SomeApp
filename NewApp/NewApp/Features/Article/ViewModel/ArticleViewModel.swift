@@ -17,18 +17,15 @@ class ArticleViewModel: ArticleViewModelProtocol {
     
     var article: Article
     var articles: [Article]
-    var articleImage: Image
+    var articleImage: Image {
+        Cache.getImage(for: article)
+    }
     var actualIndex: Int = 0
     
     init(article: Article,
          articles: [Article],
          articleImage: Image? = nil) {
         self.article = article
-        if let articleImage = articleImage {
-            self.articleImage = articleImage
-        } else {
-            self.articleImage = Cache.getImage(for: article)
-        }
         self.articles = articles
         self.actualIndex = self.actualIndexArticle()
     }
