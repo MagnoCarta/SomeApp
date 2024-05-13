@@ -1,1 +1,33 @@
-# SomeApp
+## 🏗 Architecture Overview
+
+- **Project**: Root of the project;
+	- **Shared**: Files that will be used by booth target modules;
+		- App: Application configuration/initialization files;
+		- **Services**: Services that will be consumed by ViewModels;
+		- **Utils**
+			- **Protocols**: Protocols that do not belong to just one feature;
+			- **Components**: Interface components that do not belong to just one feature;
+			- **Extensions**: Native struct/class extensions (Colors, View...);
+			- **Helpers/Managers**: Classes/Structs/etc that abstract some computation and that are used by other system constructs;
+				- LoggerManager, ErrorManager, CalendarHelper...
+			- **Styles**: New SwiftUI styles for the system;
+			- **Modifiers**: New SwiftUI modifiers for the system;
+		- **Model** or **GlobalModels**: Entities/Models belong to only one feature.
+		- **Resources**: Resources besides classes/structs
+			- String Catalogs, JSON files, image sets, color sets...
+	- **iOS**: platform specific structures;
+		- **Features**: Functionalities/Flows of the system;
+			- *FeatureA*
+				- **Components**: The feature's own interface components;
+				- **Model**: Model of the feature;
+				- **View**: View of the feature;
+				- **ViewModel**: ViewModel of the feature;
+	- **watchOS**: platform specific structures;
+		- **Features**: Functionalities/Flows of the system;
+			- *FeatureA*
+				- **Components**: The feature's own interface components;
+				- **Model**: Model of the feature;
+				- **View**: View of the feature;
+				- **ViewModel**: ViewModel of the feature;
+				- **Coordinator**: class responsible for the navigation;
+	- **Any Other Facades**: Structures used deal with the communication with the Any other Layers.
