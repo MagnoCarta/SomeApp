@@ -22,12 +22,12 @@ struct TermsArticleView: View {
         NavigationStack(path: $router.path) {
             ScrollView(.vertical, showsIndicators: false) {
                 LazyVGrid(columns: columns, spacing: 20) {
-                    ForEach(viewModel.boxes, id: \.0.id) { box,theme in
-                        TermsCardView(boxName: box.searchIn,
+                    ForEach(viewModel.terms.keys.sorted()) { term in
+                        TermsCardView(boxName: term.searchIn,
                                       numberOfTerms: 0,
-                                      theme: theme)
+                                      theme: viewModel.terms[term] ?? .aquamarine)
                         .onTapGesture {
-                            router.pushToTerm(box)
+                            router.pushToTerm(term)
                         }
                         
                     }
@@ -38,7 +38,7 @@ struct TermsArticleView: View {
                 ArticleListView(viewModel: ArticleListViewModel(request: term))
             }
             .padding(-20)
-            .navigationTitle("Boxes")
+            .navigationTitle("Terms")
             .background(NABackground())
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
@@ -52,8 +52,12 @@ struct TermsArticleView: View {
             .sheet(isPresented: $isCreatingNewBox) {
                 TermsEditorView(name: "",
                                 keywords: "",
-                                description: "",
                                 theme: 0)
+            }
+            .onReceive(NotificationCenter.default.publisher(for: Notification.Name(NotificationCenter.Names.updateTerms))) { result in
+                withAnimation {
+                    viewModel.updateTerms()
+                }
             }
         }
     }

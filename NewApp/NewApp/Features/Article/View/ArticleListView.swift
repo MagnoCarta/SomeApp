@@ -58,3 +58,12 @@ struct ArticleListView: View {
 #Preview {
     ArticleListView()
 }
+
+class ArticleListViewController: UIViewController {
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+    }
+    
+}
+

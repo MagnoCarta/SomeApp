@@ -10,38 +10,34 @@ import SwiftUI
 struct TermsEditorView: View {
     @State var name: String
     @State var keywords: String
-    @State var description: String
     @State var theme: Int
+    @Environment(\.dismiss) var dismiss
 
     var body: some View {
         NavigationStack {
             VStack(spacing: 20) {
-                NATextField(title: "Name", text: $name)
-                NATextField(title: "Keywords",
+                NATextField(title: "Title", text: $name)
+                NATextField(title: "Sources",
                             caption: "Separated by , (comma)",
                             text: $keywords)
-                
-                NATextEditor(title: "Description",
-                             text: $description)
-
                 NARadioButtonGroup(title: "Theme",
                                    currentSelection: $theme)
                 Spacer()
             }
             .padding()
             .background(NABackground())
-            .navigationTitle("New Box")
+            .navigationTitle("New Term")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button("Cancel") {
-                        print("Cancel")
+                        dismiss()
                     }
                 }
-
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("Save") {
-                        print("Cancel")
+                        TermManager().addNewTerms(terms: [name : theme])
+                        dismiss()
                     }
                     .fontWeight(.bold)
                 }
@@ -54,7 +50,6 @@ struct BoxEditorView_Previews: PreviewProvider {
     static var previews: some View {
         TermsEditorView(name: "",
                       keywords: "",
-                      description: "",
                       theme: 0)
     }
 }

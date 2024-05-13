@@ -9,14 +9,20 @@ import SwiftUI
 
 @Observable
 class TermsViewModel {
-    var boxes: [(Everything.Request,NATheme)]
+    var termManager = TermManager()
+    var terms: [Everything.Request : NATheme]
     
-    init(boxes: [(Everything.Request,NATheme)] = []) {
-        self.boxes = boxes
+    init(terms: [Everything.Request: NATheme] = [:]) {
+        self.terms = terms
     }
+    
+    func updateTerms() {
+        self.terms = termManager.getTerms()
+    }
+    
 }
 
-enum NATheme {
+enum NATheme: Int {
     case lavender
     case mauve
     case aquamarine

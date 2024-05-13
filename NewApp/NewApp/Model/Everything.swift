@@ -71,7 +71,11 @@ struct Everything {
     }
 }
 
-extension Everything.Request: Identifiable, Hashable {
+extension Everything.Request: Identifiable, Hashable, Comparable {
+    static func < (lhs: Everything.Request, rhs: Everything.Request) -> Bool {
+        lhs.searchIn < rhs.searchIn
+    }
+    
     var id: String {
         var id: String = ""
         self.queryItems.forEach { id += $0.value ?? "" }

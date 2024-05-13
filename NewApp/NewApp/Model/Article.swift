@@ -24,8 +24,8 @@ struct ArticleData: Codable {
     var isFavorite: Bool? = false
     var shadowBlock: Bool? = false
     
-    func decode() -> Article {
-        Article(self)
+    func decode(searchTerm: String) -> Article {
+        Article(self,searchTerm: searchTerm)
     }
     
 }
@@ -43,6 +43,7 @@ class Article {
     let content: String?
     var isFavorite: Bool?
     var shadowBlock: Bool?
+    var searchTerm: String
     
     init(source: Source? = nil,
          author: String? = nil ,
@@ -53,7 +54,8 @@ class Article {
          publishedAt: String? = nil,
          content: String? = nil,
          isFavorite: Bool? = false,
-         shadowBlock: Bool? = false) {
+         shadowBlock: Bool? = false,
+         searchTerm: String) {
         self.source = source
         self.author = author
         self.title = title
@@ -64,9 +66,10 @@ class Article {
         self.content = content
         self.isFavorite = isFavorite
         self.shadowBlock = shadowBlock
+        self.searchTerm = searchTerm
     }
     
-    init(_ articleData: ArticleData) {
+    init(_ articleData: ArticleData, searchTerm: String) {
         self.source = articleData.source
         self.author = articleData.author
         self.title = articleData.title
@@ -77,6 +80,7 @@ class Article {
         self.content = articleData.content
         self.isFavorite = articleData.isFavorite
         self.shadowBlock = articleData.shadowBlock
+        self.searchTerm = searchTerm
     }
     
 }

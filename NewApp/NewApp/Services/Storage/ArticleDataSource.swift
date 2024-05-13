@@ -29,16 +29,21 @@ final class ArticleDataSource {
         }
     }
 
-    func fetchArticles() -> Set<Article> {
+    func fetchArticles(for searchTerm: String) -> Set<Article> {
         do {
-            return try Set(modelContext.fetch(FetchDescriptor<Article>()))
+            return try Set(modelContext.fetch(FetchDescriptor<Article>()).compactMap { 
+                if $0.searchTerm == searchTerm {
+                    return $0
+                }
+                return nil
+            })
         } catch {
             fatalError(error.localizedDescription)
         }
     }
     
-    func saveArticles(articles: Set<Article>) {
-        articles.subtracting(self.fetchArticles()).forEach {
+    func saveArticles(articles: Set<Article>, for searchTerm: String) {
+        articles.subtracting(self.fetchArticles(for: searchTerm)).forEach {
             self.appendArticle($0)
         }
     }

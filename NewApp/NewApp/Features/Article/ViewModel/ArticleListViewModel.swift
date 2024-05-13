@@ -58,7 +58,7 @@ class ArticleListViewModel: ArticleListViewModelProtocol {
         self.searchText = searchText
         self.dataSource = dataSource
         self.cache = cache
-        self.articles.formUnion(dataSource?.fetchArticles() ?? [])
+        self.articles.formUnion(dataSource?.fetchArticles(for: request.searchIn) ?? [])
         if self.actualPage() == 1 { self.fetchArtcles() }
     }
     
@@ -113,7 +113,7 @@ class ArticleListViewModel: ArticleListViewModelProtocol {
             switch result {
             case .success(let response):
                 // É DADO SORT SOMENTE NOS NOVOS ELEMENTOS DA PESQUISA! PARA NAO BAGUNCAR A PERCEPCAO DO USUARIO DO ANTEIROR E PROXIMOS, POREM A API JA DEVE FAZER O SORT AUTOMATICO , ENTÃO TEORICAMENTE ISSO NAO DEVE SER NECESSARIO
-                let responseArticles = response.articles.map { $0.decode() }
+                let responseArticles = response.articles.map { $0.decode(searchTerm: self.request.searchIn) }
                 self.articles.formUnion(responseArticles)
                 self.saveArticles(self.articles)
             case .failure(let error):
@@ -146,6 +146,6 @@ extension ArticleListViewModel {
         }
     
     private func saveArticles(_ articles: Set<Article>) {
-            dataSource?.saveArticles(articles: articles)
+        dataSource?.saveArticles(articles: articles, for: request.searchIn)
         }
 }

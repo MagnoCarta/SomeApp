@@ -24,7 +24,7 @@ struct TermsCardView: View {
                 .font(.title3)
                 .fontWeight(.bold)
             
-            Label("\(numberOfTerms) terms", systemImage: "doc.plaintext.fill")
+            Label("\(numberOfTerms) Favorites", systemImage: "doc.plaintext.fill")
                 .padding(8)
                 .background(Color.naBlack.opacity(0.2))
                 .cornerRadius(10)
